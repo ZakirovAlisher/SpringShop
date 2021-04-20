@@ -1,0 +1,134 @@
+
+<html   xmlns:th = "http://www.thymeleaf.org" xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout"   xmlns:sec = "http://www.thymeleaf.org/extras/spring-security" layout:decorator = "layout/main2.html" >
+
+<div layout:fragment="site_content" >
+
+
+
+
+<div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th >ID</th>
+                <th th:text="#{label.name}"></th>
+                <th th:text="#{label.price}"></th>
+                <th th:text="#{label.amount}"></th>
+                <th>+-</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i : ${card}">
+                <td th:text="${i.getItem().getId()}"></td>
+                <td th:text="${i.getItem().getName()}"></td>
+
+                <td th:text="${i.getItem().getPrice()}"></td>
+                <td th:text="${i.getAmount()}"></td>
+
+
+                <td>
+
+                   <form th:action="@{/toBasket}" method="post">
+
+                    <div class="form-group">
+                        <input type="hidden" name="item_id" th:value="${i.getItem().getId()}">
+                        <input type="hidden" name="basket" th:value="1">
+                        <button type="submit" class="btn btn-success" >+</button>
+                        <button type="submit" name="del" value="1" class="btn btn-danger" >-</button>
+                    </div>
+
+
+
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+
+
+            <form th:action="@{/delbasket}" class="mt-4" method="post">
+
+                <div class="form-group">
+                    <button type="button"  data-toggle="modal" data-target="#Checkin1" class="btn btn-success mt-4 " th:text="#{label.check}"></button>
+                    <button type="submit" class="btn btn-danger ml-2 mt-4" th:text="#{label.clear}"></button>
+
+                </div>
+
+
+
+            </form>
+
+            <div class="alert alert-primary" role="alert" th:text="${successA}" th:if="${successA}"></div>
+            <div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
+            <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+            <div class="alert alert-primary" role="alert" th:text="${successD}" th:if="${successD}"></div>
+            <div class="alert alert-danger" role="alert" th:text="${errorD}" th:if="${errorD}"></div>
+
+        </table>
+        <span th:text="#{label.total}"></span>:
+        <span th:text="${total}"></span>$
+
+
+
+            <table class="table table-striped" sec:authorize="hasRole('ROLE_ADMIN')">
+                <thead>
+                <tr>
+
+                    <th th:text="#{label.item}"></th>
+                    <th th:text="#{label.price}"></th>
+                    <th th:text="#{label.date}"></th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="i : ${solds}">
+
+                    <td th:text="${i.getItem().getName()}"></td>
+
+                    <td th:text="${i.getItem().getPrice()}"></td>
+                    <td th:text="${i.getDate()}"></td>
+
+
+                </tr>
+                </tbody>
+            </table>
+
+
+
+
+    </div>
+    <div class="modal fade" id="Checkin1" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                <form th:action="@{/checkin}" method="post">
+                    <div class="form-group">
+
+                        <span th:text="#{label.fullname}"></span>:  <input type="text" class="form-control">
+
+                        <span th:text="#{label.card}"></span>:
+                        <input type="text" class="form-control" >
+
+                        CVV:
+                        <input type="text" class="form-control" >
+<img src="https://storage.finance.kz/images/2019/11/27/fa05e43c0ae23e5e56f48947e5e19610.png" class="mt-2 mr-2 mb-2" style="width: 100%; height: 270px">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" style="background-color: rgba(46,86,80,1);" th:text="#{label.pay}"></button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+</html>

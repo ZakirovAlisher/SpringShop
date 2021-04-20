@@ -1,0 +1,180 @@
+
+<div   xmlns:th = "http://www.thymeleaf.org" xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html" >
+
+<div layout:fragment="site_content" >
+
+
+
+
+
+    <div class="row mt-5 ">
+        <div class="container" >
+        <div class=" card w-100  shadow" >
+
+            <div class="card-header">
+
+                <img  th:src="${t.getLargePicURL()}" class="w-100  border border-success" height="620"  >
+
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
+                <h3> <div class="card-title" th:text="${t.getName()}" > </div></h3>
+                <h5 th:text="${t.getPrice() + '$'}"> </h5>
+                <div th:text="${t.getDescription()}" ></div>
+                <div th:text="${t.getAddedDate()}" ></div>
+
+
+
+            </div>
+            <div class="card-body " style="border-top: rgba(162,156,156,0.33) 1px solid">
+
+
+                <span style="font-weight: bold"  th:text="#{label.cat}"></span>:
+                <div   th:each="i : ${t.getCategories()}" >
+                    <span class="ml-2" th:text="${i.getName()}"></span>
+
+                </div>
+
+            </div>
+
+            </div>
+
+            <div class=" card-footer w-100">
+
+                <img  th:each="i : ${#numbers.sequence( 1, t.getStars(), 1)}" width="15" height="15" src="https://www.freepnglogos.com/uploads/star-png/star-vector-png-transparent-image-pngpix-21.png"><img  th:each="i : ${#numbers.sequence( t.getStars(), 4, 1)}" width="15" height="15" src="https://pngimg.com/uploads/star/star_PNG41451.png">
+
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+<div class="container shadow p-3 mt-2">
+    <form method="post" class="w-100" th:action="@{'/saveitem'}">
+    <div class="form-group">
+        <input type="hidden" th:value="${t.id}" class="form-control" name="id">
+        Name <input type="text" th:value="${t.name}" class="form-control" name="name">
+        Desc <input type="text" th:value="${t.description}"class="form-control" name="desc">
+
+
+        Price <input  th:value="${t.price}" type="text" class="form-control" name="price">
+
+        Stars <input  th:value="${t.stars}" type="text" class="form-control" name="stars">
+        SmallUrl <input  th:value="${t.smallPicURL}" type="text" class="form-control" name="s_url">
+
+        LargeUrl <input  th:value="${t.largePicURL}" type="text" class="form-control" name="l_url">
+
+        <button name="del" value="1" class="btn btn-danger mt-2">DELETE</button>
+        <button class="btn btn-success mt-2">SAVE</button>
+    </div>
+
+    </form>
+
+    <table class="table table-stripped mr-5" id="categories_tables">
+        <tbody>
+        <tr th:each="cat : ${cats}"  th:classappend ="${t.categories.contains(cat)} ? bg-success  : '' "  >
+
+            <form method="post" th:action="@{'/assigncategory'}">
+
+                <input type="hidden" th:value="${t.id}" name="item_id">
+
+                <input type="hidden" th:value="${cat.id}" name="category_id">
+
+                <td th:classappend ="${t.categories.contains(cat)} ? text-white  : '' " class="display-4" th:text="${cat.name}"></td>
+
+                <td width="10%">
+                    <button   name="del" value="1" th:if="${t.categories.contains(cat)}" class="btn btn-danger display-4">-</button>
+                    <button  th:if="${!t.categories.contains(cat)}" class="btn btn-success display-4">+</button>
+                </td>
+
+
+            </form>
+
+
+        </tr>
+
+
+
+        </tbody>
+
+
+    </table>
+
+Pictures
+    <table class="table table-striped mr-5">
+        <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Url</th>
+            <th>Added Date</th>
+            <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${pics}">
+            <td  >  <img th:src="@{'/viewphoto/'+${i.getUrl()}}"  style="width: 100px;height: 100px "> </td>
+            <td th:text="${i.getUrl()}"></td>
+            <td th:text="${i.getAddedDate()}"></td>
+            <td >
+                <form method="post" th:action="@{'/delPic'}">
+
+                    <input type="hidden" th:value="${t.id}" name="item_id">
+
+                    <input type="hidden" th:value="${i.id}" name="pic_id">
+
+                <button   name="del" value="1" class="btn btn-danger display-4">-</button>
+
+                </form>
+            </td>
+
+
+        </tr>
+        </tbody>
+    </table>
+
+
+    <button   data-toggle="modal"  data-target="#addPic"  class="btn btn-success display-4">+</button>
+
+</div>
+    <div class="modal fade" id="addPic" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+
+                <form  th:action="@{/addPic}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+
+
+                        <input type="hidden" th:value="${t.id}" name="item_id">
+
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile" name="pic">
+                                <label class="custom-file-label" for="customFile">Choose pic</label>
+                            </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" style="background-color: rgba(46,86,80,1);">ADD</button>
+                    </div>
+                </form>
+            </div></div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<div layout:fragment="footer" >
+    <div class="container-fluid text-center "  style="background-color: #373434; color: white;height: 200px; padding-top: 100px;" >
+        Copyright(C) E-SHOP.KZ
+    </div>
+</div>
+
+</html>

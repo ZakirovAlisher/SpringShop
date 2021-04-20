@@ -1,0 +1,82 @@
+
+<html   xmlns:th = "http://www.thymeleaf.org" xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html" >
+
+<div layout:fragment="site_content" >
+
+
+    <form method="get" th:action="@{'/search2'}" >
+        <div class="row">
+            <input type="text" class="form-control mt-2 col-2 shadow" name="name" placeholder="Name">
+
+            <input type="text" class="form-control mt-2 col-2 shadow" name="price1" placeholder="Price start">
+            <input type="text" class="form-control mt-2 col-2 shadow" name="price2" placeholder="Price finish">
+
+
+            <select class="form-control mt-2 col-2 shadow" name="brand" placeholder="Brand">
+                <option  value="-2">All brands</option>
+                <option th:each="br : ${brands}" th:text="${br.name}" th:value="${br.id}"></option>
+
+            </select>
+            <select class="form-control mt-2 col-2 shadow" name="cat" placeholder="Category">
+                <option  value="-2">All categories</option>
+                <option th:each="cat : ${cats}" th:text="${cat.name}" th:value="${cat.id}"></option>
+
+            </select>
+
+
+
+            <div class="btn-group btn-group-toggle mt-2 col-2" data-toggle="buttons">
+                <label class="btn btn-success active shadow">
+                    <input type="radio" name="order" class="shadow" value="asc" id="option1" autocomplete="off" checked> ASC
+                </label>
+
+                <label class="btn btn-success shadow">
+                    <input type="radio" name="order" class="shadow" value="desc" id="option3" autocomplete="off"> DESC
+                </label>
+            </div>
+            <br>
+            <button class="btn btn-success mt-2 col-2 shadow" th:text="#{label.search}"></button>
+        </div>
+    </form>
+
+
+
+    <div class="row mt-5">
+
+        <div class="  col-4 p-4" th:each="t : ${items}">
+            <div class="card shadow"  >
+                <a th:href="@{'/details/' + ${t.getId()}}">
+
+                    <div class="card-header">
+
+                        <img  th:src="${t.getSmallPicURL()}" class="w-100 border border-success shadow"   style="height: 350px " >
+
+                    </div>
+                </a>
+                <div class="card-body">
+                    <div style="font-weight: bold; font-size: 30px" class="card-title" th:text="${t.getName()}" > </div>
+                    <h5 th:text="${t.getPrice() + '$'}"> </h5>
+                    <div th:text="${t.getDescription()}" ></div>
+                    <b> BRAND:</b>  <div th:text=" ${t.getBrand().name + ', ' + t.getBrand().getCountry().name}" ></div>
+
+                </div>
+
+                <div class=" card-footer w-100">
+
+                    <img  th:each="i : ${#numbers.sequence( 1, t.getStars(), 1)}" width="15" height="15" src="https://www.freepnglogos.com/uploads/star-png/star-vector-png-transparent-image-pngpix-21.png"><img  th:each="i : ${#numbers.sequence( t.getStars(), 4, 1)}" width="15" height="15" src="https://pngimg.com/uploads/star/star_PNG41451.png">
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+</html>
